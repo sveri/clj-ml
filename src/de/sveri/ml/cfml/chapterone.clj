@@ -1,4 +1,4 @@
-(ns de.sveri.cfml.chapterone
+(ns de.sveri.ml.cfml.chapterone
   (:require [clojure.core.matrix :refer [matrix] :as m]
             [clatrix.core :as cl]
             [clojure.core.matrix.operators :as M]

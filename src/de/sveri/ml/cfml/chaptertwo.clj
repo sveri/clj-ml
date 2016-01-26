@@ -1,5 +1,6 @@
-(ns de.sveri.cfml.chaptertwo
+(ns de.sveri.ml.cfml.chaptertwo
   (:require [clatrix.core :as cl]
+            [clojure.core.matrix :as m]
             [incanter.charts :as charts]
             [incanter.core :as ic]
             [incanter.stats :as stats]
@@ -19,8 +20,7 @@
          (def samp-linear-model (stats/linear-model Y X))
 
          (defn plot-model []
-           (ic/view (charts/add-lines linear-samp-scatter
-                                      X (:fitted samp-linear-model)))))
+           (ic/view (charts/add-lines linear-samp-scatter))))
 
 
 (def gradient-descent-precision 0.001)
@@ -49,3 +49,26 @@
   (let [x (range -100 100)
         y (:fitted iris-linear-model)]
     (ic/view (charts/xy-plot x y))))
+
+(defn linear-model-ols
+  "Estimates the coefficients of a multi-var linear
+  regression model using Ordinary Least Squares (OLS) method"
+  [MX MY]
+  (let [X (ic/bind-columns (repeat (m/row-count MX) 1) MX)
+        Xt (cl/matrix (m/transpose X))
+        Xt-X (cl/* Xt X)]
+    (cl/* (m/inverse Xt-X) Xt MY)))
+
+(def ols-linear-model
+  (linear-model-ols X Y))
+
+(def ols-linear-model-coefs
+  (cl/as-vec ols-linear-model))
+
+
+
+(defn predict [coefs X]
+  {:pre [(= (count coefs) (+ 1 (count X)))]}
+  (let [X-with-1 (conj X 1)
+        products (map * coefs X-with-1)]
+    (reduce + products)))
