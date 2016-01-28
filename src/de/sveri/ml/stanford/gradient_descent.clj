@@ -1,12 +1,13 @@
-(ns de.sveri.ml.stanford.linear-regression)
+(ns de.sveri.ml.stanford.gradient-descent
+  (:require [incanter.optimize :as ino]))
 
 
 (def x [1 2 3])
 
 (def y [10 20 30])
 
-(defn some-fn [a]
-  (+ a 3))
+(defn lin-fn [theta_0 theta_1 x]
+  (+ theta_0 (* theta_1 x)))
 
 (defn cost-function [h x y]
   (let [res (/ (reduce (fn [a [xn yn]]
